@@ -1,8 +1,8 @@
-dependencies = ["torch"]
-
 import torch
-
+import os
 from unet import UNet
+
+dependencies = ["torch"]
 
 
 def unet(pretrained=False, **kwargs):
@@ -16,8 +16,9 @@ def unet(pretrained=False, **kwargs):
     model = UNet(**kwargs)
 
     if pretrained:
-        checkpoint = "https://github.com/mateuszbuda/brain-segmentation-pytorch/releases/download/v1.0/unet-e012d006.pt"
-        state_dict = torch.hub.load_state_dict_from_url(checkpoint, progress=False)
+        dirname = os.path.dirname(__file__)
+        checkpoint = os.path.join(dirname, 'weights/unet.pt')
+        state_dict = torch.load(checkpoint)
         model.load_state_dict(state_dict)
 
     return model
